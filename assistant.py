@@ -4,9 +4,7 @@ from dotenv import load_dotenv
 import os
 import json
 import helpers
-from pathlib import Path
-from pydub.playback import play
-from pydub import AudioSegment
+import utils
 load_dotenv()
 
 
@@ -93,17 +91,8 @@ class AssistantManager:
                 messages = self.client.beta.threads.messages.list(thread_id=self.thread.id)
                 latest_message = messages.data[0]
                 text = latest_message.content[0].text.value
-                return text
-                speech_file_path = Path().parent / "speech.mp3"
-                res= self.client.audio.speech.create(
-                model="tts-1",
-                voice="alloy",
-                input=text,
-                )
-
-                res.stream_to_file(speech_file_path)
-                sound=AudioSegment.from_mp3(speech_file_path)
-                play(sound)
+                print(text)
+                utils.tts(text)
 
                 user_input = input()
                 if user_input == "STOP":
