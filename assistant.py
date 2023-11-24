@@ -69,13 +69,13 @@ class AssistantManager:
         ]
         )
         return run
-    def run_assistant(self):
+    def run_assistant(self, transcript):
         while True:
             if not self.thread:
                 self.thread = self.client.beta.threads.create()
 
             if not self.run:
-                self.run, self.thread = self.create_message_and_run(self.assistant, "Hello")
+                self.run, self.thread = self.create_message_and_run(self.assistant, transcript)
 
             run = self.client.beta.threads.runs.retrieve(thread_id=self.thread.id, run_id=self.run.id)
             print("run status", run.status)
@@ -92,16 +92,12 @@ class AssistantManager:
                 latest_message = messages.data[0]
                 text = latest_message.content[0].text.value
                 print(text)
-                utils.tts(text)
+                
 
-                user_input = input()
-                if user_input == "STOP":
-                    break
+                #self.run, self.thread = self.create_message_and_run(self.assistant, tran)
+            return text
 
-                self.run, self.thread = self.create_message_and_run(self.assistant, user_input)
-                continue
-
-            time.sleep(1)
+            #time.sleep(1)
 
     
 def main():
