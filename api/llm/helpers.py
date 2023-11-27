@@ -7,7 +7,7 @@ from decouple import config
 # Accessing the environment variables
 client_token = config('ZINC_API_KEY')
 cart = []
-
+contact=[]
 # takes search query and searches for product
 
 
@@ -21,3 +21,9 @@ def add_to_cart(product):
     cart.append(product)
     print(cart)
     return cart
+
+#take contact information
+def get_contact(contact_info):
+    contact.append(contact_info)
+    #code that stores contact info in db
+    return contact_info
