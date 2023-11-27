@@ -32,10 +32,10 @@ class AssistantManager:
         else:
             results = f"Error: function {function_name} does not exist"
         return results
-    def create_message_and_run(self,assistant,query):
-        if not self.thread:
-            self.thread = self.client.beta.threads.create()
+    def create_thread(self):
+        self.thread = self.client.beta.threads.create()
 
+    def create_message_and_run(self,assistant,query):
         message = self.client.beta.threads.messages.create(
             thread_id=self.thread.id,
             role="user",
@@ -159,6 +159,7 @@ def main():
     }
 ]
 )
+    manager.create_thread()
     manager.run_assistant()
 
     
