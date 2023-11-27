@@ -8,7 +8,7 @@ from decouple import config
 
 
 class AssistantManager:
-    def __init__(self, api_key, model="gpt-4-1106-preview", functions={"search": helpers.search, "add_to_cart": helpers.add_to_cart}):
+    def __init__(self, api_key, model="gpt-4-1106-preview", functions={"search": helpers.search, "add_to_cart":helpers.add_to_cart, "get_contact":helpers.get_contact}):
         self.client = OpenAI(api_key=api_key)
         self.model = model
         self.available_functions = functions
@@ -151,7 +151,24 @@ def create_manager():
                         "required": ["product"]
                     }
                 }
+            },
+            {
+        "type": "function",
+        "function": {
+            "name": "get_contact",
+            "description": "stores contact informaton of user to add them to thw waitlist",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "contact_info": {
+                        "type": "string",
+                        "description": "The phone number of the customer"
+                    }
+                },
+                "required": ["contact_info"]
             }
+        }
+    }
         ]
     )
     return manager
