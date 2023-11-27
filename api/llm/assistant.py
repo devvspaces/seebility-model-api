@@ -74,38 +74,32 @@ class AssistantManager:
         return run
 
     def run_assistant(self, transcript):
-        while True:
-            if not self.thread:
-                self.thread = self.client.beta.threads.create()
+            self.run, self.thread = self.create_message_and_run(self.assistant, transcript)
+            
+            while True:
+                    run = self.client.beta.threads.runs.retrieve(
+                    thread_id=self.thread.id, run_id=self.run.id)
+                    print("run status", run.status)
+                    if run.status == "requires_action":
+                        function_name, arguments, function_id = self.get_function_details(
+                            run)
+                        function_response = self.execute_function_call(
+                            function_name, arguments)
+                        self.submit_tool_outputs(
+                            run, self.thread, function_id, function_response)
+                        time.sleep(3)
+                        continue
 
-            if not self.run:
-                self.run, self.thread = self.create_message_and_run(
-                    self.assistant, transcript)
+                    if run.status == "completed":
+                        messages = self.client.beta.threads.messages.list(
+                            thread_id=self.thread.id)
+                        latest_message = messages.data[0]
+                        text = latest_message.content[0].text.value
+                        print(text)
+                        #self.run = None
 
-            run = self.client.beta.threads.runs.retrieve(
-                thread_id=self.thread.id, run_id=self.run.id)
-            print("run status", run.status)
-
-            if run.status == "requires_action":
-                function_name, arguments, function_id = self.get_function_details(
-                    run)
-                function_response = self.execute_function_call(
-                    function_name, arguments)
-                self.submit_tool_outputs(
-                    run, self.thread, function_id, function_response)
-                time.sleep(3)
-                continue
-
-            if run.status == "completed":
-                messages = self.client.beta.threads.messages.list(
-                    thread_id=self.thread.id)
-                latest_message = messages.data[0]
-                text = latest_message.content[0].text.value
-                print(text)
-                self.run = None
-
-                # self.run, self.thread = self.create_message_and_run(self.assistant, tran)
-                return text
+                        # self.run, self.thread = self.create_message_and_run(self.assistant, tran)
+                        return text
 
             # time.sleep(1)
 
