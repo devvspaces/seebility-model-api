@@ -9,7 +9,7 @@ load_dotenv()
 
 
 class AssistantManager:
-    def __init__(self, api_key, model="gpt-4-1106-preview",functions={"search": helpers.search, "add_to_cart":helpers.add_to_cart}):
+    def __init__(self, api_key, model="gpt-4-1106-preview",functions={"search": helpers.search, "add_to_cart":helpers.add_to_cart, "get_contact":helpers.get_contact}):
         self.client = OpenAI(api_key=api_key)
         self.model = model
         self.available_functions=functions
@@ -32,7 +32,7 @@ class AssistantManager:
         else:
             results = f"Error: function {function_name} does not exist"
         return results
-    def create_message_and_run(self,assistant,query,):
+    def create_message_and_run(self,assistant,query):
         if not self.thread:
             self.thread = self.client.beta.threads.create()
 
@@ -69,34 +69,32 @@ class AssistantManager:
         ]
         )
         return run
-    def run_assistant(self, transcript):
-        while True:
-            if not self.thread:
-                self.thread = self.client.beta.threads.create()
-
-            if not self.run:
-                self.run, self.thread = self.create_message_and_run(self.assistant, transcript)
-
-            run = self.client.beta.threads.runs.retrieve(thread_id=self.thread.id, run_id=self.run.id)
-            print("run status", run.status)
-
-            if run.status == "requires_action":
-                function_name, arguments, function_id = self.get_function_details(run)
-                function_response = self.execute_function_call(function_name, arguments)
-                self.submit_tool_outputs(run, self.thread, function_id, function_response)
-                time.sleep(3)
-                continue
-
-            if run.status == "completed":
-                messages = self.client.beta.threads.messages.list(thread_id=self.thread.id)
-                latest_message = messages.data[0]
-                text = latest_message.content[0].text.value
-                print(text)
+    def run_assistant(self):
+            while True:
+                user_input=input()
+                self.run, self.thread = self.create_message_and_run(self.assistant, user_input)
+                while True:
+                    run = self.client.beta.threads.runs.retrieve(thread_id=self.thread.id, run_id=self.run.id)
+                    print("run status", run.status)
                 
+                    if run.status == "requires_action":
+                        function_name, arguments, function_id = self.get_function_details(run)
+                        function_response = self.execute_function_call(function_name, arguments)
+                        self.submit_tool_outputs(run, self.thread, function_id, function_response)
+                        time.sleep(3)
+                        
 
-                #self.run, self.thread = self.create_message_and_run(self.assistant, tran)
-            return text
-
+                    elif run.status == "completed":
+                        messages = self.client.beta.threads.messages.list(thread_id=self.thread.id)
+                        latest_message = messages.data[0]
+                        text = latest_message.content[0].text.value
+                        print(text)
+                        break
+                    else: 
+                        print('waiting for assistant')  
+                if user_input=='st':
+                    break
+                #return text
             #time.sleep(1)
 
     
@@ -106,7 +104,7 @@ def main():
     # create assistant
     manager.create_assistant(
         name="Ecommerce shopping assistant",
-        instructions="You are a conversational voice ecommerce shopping assistant, Use the provided functions to answer questions. Synthesise answer based on provided function output in voice output friendly form and be consise and human engaging also remember not to add links and eliminate any asterisks and symbols that would obstruct the voice output",
+        instructions="You are a conversational voice ecommerce shopping assistant, Use the provided functions to answer questions. Synthesise answer based on provided function output in voice output friendly form and be consise and human engaging also remember not to add links and eliminate any asterisks and symbols that would obstruct the voice output, whenever an order placement is initiated ask for their phone number to add them to the waitlist and update them when the feature is rolled out",
         tools = [
     {
         "type": "function",
@@ -139,6 +137,23 @@ def main():
                     }
                 },
                 "required": ["product"]
+            }
+        }
+    },
+     {
+        "type": "function",
+        "function": {
+            "name": "get_contact",
+            "description": "stores contact informaton of user to add them to thw waitlist",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "contact_info": {
+                        "type": "string",
+                        "description": "The phone number of the customer"
+                    }
+                },
+                "required": ["contact_info"]
             }
         }
     }
