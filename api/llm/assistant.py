@@ -89,16 +89,18 @@ class AssistantManager:
                         time.sleep(3)
                         continue
 
+                    if run.status =="failed":
+                        text="an error was encountered, kindly retry"
                     if run.status == "completed":
                         messages = self.client.beta.threads.messages.list(
                             thread_id=self.thread.id)
                         latest_message = messages.data[0]
                         text = latest_message.content[0].text.value
                         print(text)
-                        #self.run = None
-
-                        # self.run, self.thread = self.create_message_and_run(self.assistant, tran)
                         return text
+                        #self.run = None
+                        # self.run, self.thread = self.create_message_and_run(self.assistant, tran)
+                        
 
             # time.sleep(1)
 
