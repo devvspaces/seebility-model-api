@@ -7,7 +7,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [
+                           s.strip() for s in v.split(',')], default='*')
 
 
 INSTALLED_APPS = [
@@ -141,6 +145,8 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "static"
+
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = '/media/'
 
