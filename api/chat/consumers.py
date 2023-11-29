@@ -30,21 +30,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         #     return
 
         self.room_group_name = f"chat_{self.room_name}"
-        print("got here 1")
 
         # Join room group
         await self.channel_layer.group_add(
             self.room_group_name, self.channel_name)
-        print("got here 2")
 
         # Create assistant manager
         if self.room_name not in self.managers:
             manager = create_manager()
             self.managers[self.room_name] = manager
-        print("got here 3")
 
         await self.accept()
-        print("got here 4")
 
     async def disconnect(self, close_code):
         # Leave room group

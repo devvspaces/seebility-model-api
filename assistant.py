@@ -88,8 +88,10 @@ class AssistantManager:
                         messages = self.client.beta.threads.messages.list(thread_id=self.thread.id)
                         latest_message = messages.data[0]
                         text = latest_message.content[0].text.value
-                        print(text)
-                        break
+                        # print(text)
+                        # Return the text so that the caller can use it
+                        return text
+                        break  # Break statement is ignored because of return above, it's not needed
                     else: 
                         print('waiting for assistant')  
                 if user_input=='st':

@@ -164,4 +164,5 @@ def create_manager():
     }
         ]
     )
+    manager.create_thread()
     return manager
