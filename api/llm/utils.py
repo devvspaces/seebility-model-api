@@ -5,6 +5,8 @@ from uuid import uuid4
 
 client = OpenAI(api_key=config('OPENAI_API_KEY'))
 
+DIR_PATH = Path(__file__).resolve().parent.parent
+
 
 def tts(text):
     """
@@ -13,7 +15,7 @@ def tts(text):
     Returns the audio file in bytes.
     """
     mpath = f'media/tts/{uuid4()}.mp3'
-    speech_file_path = Path().parent / mpath
+    speech_file_path = DIR_PATH / mpath
     res = client.audio.speech.create(
         model="tts-1",
         voice="alloy",
