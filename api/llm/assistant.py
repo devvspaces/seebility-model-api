@@ -91,6 +91,8 @@ class AssistantManager:
 
                     if run.status =="failed":
                         text="an error was encountered, kindly retry"
+                        print(text)
+                        break
                     if run.status == "completed":
                         messages = self.client.beta.threads.messages.list(
                             thread_id=self.thread.id)
