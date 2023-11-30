@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import json
 
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -16,8 +17,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        print("got here")
-        print(self.scope)
 
         # user_id = get_user_id(self.scope["query_string"].decode("utf-8"))
 
@@ -78,11 +77,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to room group
         await self.send(text_data=json.dumps({"message": run}))
 
+        await asyncio.sleep(1)
+
+        print("Started TTS")
         # Convert response to audio
         response = tts(run)
+        print("Finished TTS")
+
+        for chunk in response.iter_bytes(chunk_size=(4096 * 2)):
+            print("Sending chunk")
+            await self.send(bytes_data=chunk)
+            await asyncio.sleep(1)
+            # await self.send(text_data=json.dumps({"audio": base64.b64encode(chunk).decode('utf-8')}))
 
         # Get value from response
-        await self.send(text_data=json.dumps({"audio": response}))
+        # await self.send(text_data=json.dumps({"audio": base64.b64encode(response.read()).decode('utf-8')}))
 
     # Receive message from room group
 

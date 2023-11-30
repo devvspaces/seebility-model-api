@@ -2,6 +2,7 @@ from openai import OpenAI
 from decouple import config
 from pathlib import Path
 from uuid import uuid4
+from datetime import datetime
 
 client = OpenAI(api_key=config('OPENAI_API_KEY'))
 
@@ -19,10 +20,10 @@ def tts(text):
     res = client.audio.speech.create(
         model="tts-1",
         voice="alloy",
-        input=text
+        input=text,
+        response_format="aac"
     )
-    res.stream_to_file(speech_file_path)
-    return mpath
+    return res
 
 
 def stt(content: bytes):
