@@ -88,10 +88,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print("Sending chunk")
             await self.send(bytes_data=chunk)
             await asyncio.sleep(1)
-            # await self.send(text_data=json.dumps({"audio": base64.b64encode(chunk).decode('utf-8')}))
 
-        # Get value from response
-        # await self.send(text_data=json.dumps({"audio": base64.b64encode(response.read()).decode('utf-8')}))
 
     # Receive message from room group
 

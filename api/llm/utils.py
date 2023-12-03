@@ -1,8 +1,6 @@
 from openai import OpenAI
 from decouple import config
 from pathlib import Path
-from uuid import uuid4
-from datetime import datetime
 
 client = OpenAI(api_key=config('OPENAI_API_KEY'))
 
@@ -15,8 +13,6 @@ def tts(text):
     Accepts the text to be converted to speech.
     Returns the audio file in bytes.
     """
-    mpath = f'media/tts/{uuid4()}.mp3'
-    speech_file_path = DIR_PATH / mpath
     res = client.audio.speech.create(
         model="tts-1",
         voice="alloy",
