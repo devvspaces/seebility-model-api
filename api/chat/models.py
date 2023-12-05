@@ -1,7 +1,5 @@
 from django.db import models
 
-# NOTE: Indexed room_name for faster lookup
-
 
 class ChatMessage(models.Model):
     room_name = models.CharField(max_length=100)
@@ -16,3 +14,19 @@ class ChatMessage(models.Model):
         indexes = [
             models.Index(fields=["room_name"], name="room_name_idx"),
         ]
+
+
+class CartItem(models.Model):
+    id = models.CharField(unique=True, primary_key=True)
+    user_id = models.CharField(max_length=100, db_column="userId")
+    product_id = models.CharField(max_length=100, db_column="productId")
+    quantity = models.IntegerField()
+    price = models.FloatField()
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        managed = False
+        db_table = "cart_items"

@@ -116,6 +116,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'api_db': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config("API_DB_NAME"),
+        'USER': config("API_DB_USER"),
+        'PASSWORD': config("API_DB_PASSWORD"),
+        'HOST': config("API_DB_HOST"),
+        'PORT': config("API_DB_PORT"),
     }
 }
 
@@ -169,6 +177,11 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': False,
         },
+        'django.db.backends': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     },
     'handlers': {
         'basic_h': {
@@ -182,6 +195,15 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'logs/error.log',
             'formatter': 'simple',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'django_queries.log',  # Choose a file name and path
         },
     },
     'formatters': {
