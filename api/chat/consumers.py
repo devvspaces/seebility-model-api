@@ -84,10 +84,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         response = tts(run)
         print("Finished TTS")
 
-        for chunk in response.iter_bytes(chunk_size=(4096 * 2)):
+        for chunk in response.iter_bytes():
             print("Sending chunk")
             await self.send(bytes_data=chunk)
-            await asyncio.sleep(1)
+            # await asyncio.sleep(1)
 
 
     # Receive message from room group

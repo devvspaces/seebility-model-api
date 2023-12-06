@@ -17,7 +17,7 @@ class ChatMessage(models.Model):
 
 
 class CartItem(models.Model):
-    id = models.CharField(unique=True, primary_key=True)
+    id = models.CharField(unique=True, primary_key=True, max_length=100)
     user_id = models.CharField(max_length=100, db_column="userId")
     product_id = models.CharField(max_length=100, db_column="productId")
     quantity = models.IntegerField()
