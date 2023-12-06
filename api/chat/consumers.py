@@ -69,6 +69,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Add message to database
         await self.add_chat_message(message)
 
+        print(message)
+
         run = manager.run_assistant(transcript)
 
         # Add message to database
@@ -88,7 +90,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print("Sending chunk")
             await self.send(bytes_data=chunk)
             # await asyncio.sleep(1)
-
 
     # Receive message from room group
 
