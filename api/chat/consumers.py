@@ -9,6 +9,7 @@ from llm.utils import tts
 from typing import Dict
 from channels.db import database_sync_to_async
 from chat.models import ChatMessage
+from time import time
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -66,15 +67,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         manager = self.managers[self.room_name]
         transcript = message
 
-        # Add message to database
-        await self.add_chat_message(message)
-
         print(message)
 
+        start = time()
         run = manager.run_assistant(transcript)
-
-        # Add message to database
-        await self.add_chat_message(run, ai=True)
+        print(f"Process: Run Assistant: Time taken: {time() - start}s")
 
         # Send message to room group
         await self.send(text_data=json.dumps({"message": run}))
@@ -83,13 +80,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         print("Started TTS")
         # Convert response to audio
+        start = time()
         response = tts(run)
+        print(f"Process: Text To Speech: Time taken: {time() - start}s")
         print("Finished TTS")
 
         for chunk in response.iter_bytes():
             print("Sending chunk")
             await self.send(bytes_data=chunk)
-            # await asyncio.sleep(1)
+
+        await asyncio.sleep(1)
+
+        # Add message to database
+        await self.add_chat_message(message)
+        await self.add_chat_message(run, ai=True)
 
     # Receive message from room group
 

@@ -1,5 +1,6 @@
 import base64
 from pydub import AudioSegment
+from llm.utils import tts_file
 
 
 def convert_mp3_to_opus(mp3_file, opus_file):
@@ -30,13 +31,13 @@ def audio_to_base64(file_path):
 
 # audio_path = "llm/speech.mp3"
 # audio_path = "llm/speech1.wav"
-audio_path = "llm/speech.opus"
+# audio_path = "llm/speech.opus"
 
-base64_audio = audio_to_base64(audio_path)
+# base64_audio = audio_to_base64(audio_path)
 
 
-with open("base64.txt", "w") as f:
-    f.write(base64_audio)
+# with open("base64.txt", "w") as f:
+#     f.write(base64_audio)
 
 # Example usage
 # mp3_input_file = "llm/speech.mp3"  # Replace with your input MP3 file path
@@ -44,3 +45,19 @@ with open("base64.txt", "w") as f:
 # opus_output_file = "llm/speech.opus"
 
 # convert_mp3_to_opus(mp3_input_file, opus_output_file)
+
+
+voices = [
+    {
+        "text": "Hey, tap your screen! Tell Us What You Want.",
+        "file_name": "welcome.mp3"
+    },
+    {
+        "text": "I am currently surfing the web for you for products that match your request.",
+        "file_name": "wait.mp3"
+    },
+]
+
+
+for voice in voices:
+    tts_file(voice["text"], voice["file_name"])

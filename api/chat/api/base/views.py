@@ -9,6 +9,7 @@ from llm.utils import stt
 import base64
 from django.conf import settings
 import os
+from time import time
 
 
 class GetChatsView(generics.ListAPIView):
@@ -31,6 +32,7 @@ class SpeechToTextView(generics.GenericAPIView):
         request_body=serializers.SpeechToTextSerializer(),
     )
     def post(self, request, *args, **kwargs):
+        start = time()
         serializer = serializers.SpeechToTextSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         audio = serializer.validated_data["record"]
@@ -41,6 +43,7 @@ class SpeechToTextView(generics.GenericAPIView):
         with open(audio_path, "rb") as audio_r:
             text = stt(audio_r)
             os.remove(audio_path)
+            print(f"Process: Speech to text: Time taken: {time() - start}s")
             return Response(
                 {"text": text}, status=status.HTTP_200_OK
             )
