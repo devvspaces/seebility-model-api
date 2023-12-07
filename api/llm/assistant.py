@@ -8,7 +8,7 @@ from decouple import config
 
 
 class AssistantManager:
-    def __init__(self, api_key, model="gpt-4-1106-preview", functions={"search": helpers.search, "add_to_cart":helpers.add_to_cart, "get_contact":helpers.get_contact}):
+    def __init__(self, api_key, model="gpt-3.5-turbo-1106", functions={"search": helpers.search, "add_to_cart":helpers.add_to_cart, "get_contact":helpers.get_contact}):
         self.client = OpenAI(api_key=api_key)
         self.model = model
         self.available_functions = functions
@@ -113,7 +113,7 @@ def create_manager():
     # create assistant
     manager.create_assistant(
         name="Ecommerce shopping assistant",
-        instructions="You are a conversational voice ecommerce shopping assistant, Use the provided functions to answer questions. Synthesise answer based on provided function output in voice output friendly form and be consise and human engaging also remember not to add links and eliminate any asterisks and symbols that would obstruct the voice output",
+        instructions="You are a conversational voice ecommerce shopping assistant,  ensure that you narrow down what exactly the user wants before performing a search , Use the provided functions to answer questions. Synthesise answer based on provided function output in voice output friendly form and be consise not using too many words but communicating effectively, human engagingly also remember not to add links and eliminate any asterisks and symbols that would obstruct the voice output",
         tools=[
             {
                 "type": "function",
