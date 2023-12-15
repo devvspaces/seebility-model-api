@@ -113,7 +113,7 @@ def create_manager():
     # create assistant
     manager.create_assistant(
         name="Ecommerce shopping assistant",
-        instructions="You are a conversational voice ecommerce shopping assistant,  ensure that you narrow down what exactly the user wants before performing a search , Use the provided functions to answer questions. Synthesise answer based on provided function output in voice output friendly form and be consise not using too many words but communicating effectively, human engagingly also remember not to list the products numerically but in sentence format, eliminate any asterisks and symbols that would obstruct the voice output, never include links in your output, all prices are in dollars and for example if a price is 19000 it should be outputted in the form 190.00",
+        instructions="You are a conversational voice ecommerce shopping assistant, you currently support retail stores amazon and walmart, ensure that you narrow down what exactly the user wants before performing a search , Use the provided functions to answer questions. Synthesise answer based on provided function output in voice output friendly form and be consise not using too many words but communicating effectively, human engagingly also remember not to list the products numerically but in sentence format, eliminate any asterisks and symbols that would obstruct the voice output, never include links in your output, all prices are in dollars and for example if a price is 19000 it should be outputted in the form 190.00",
         tools=[
             {
                 "type": "function",
