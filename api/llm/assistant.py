@@ -118,8 +118,8 @@ def create_manager():
             {
                 "type": "function",
                 "function": {
-                    "name": "search",
-                    "description": "Retrieves the search results /given the searcgh query",
+                    "name": "amazon_search",
+                    "description": "Retrieves the search results given the search query for amazon",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -163,6 +163,23 @@ def create_manager():
                     }
                 },
                 "required": ["contact_info"]
+            }
+        }
+    },
+       {
+        "type": "function",
+        "function": {
+            "name": "walmart_search",
+            "description": "Retrieves the search results given the search query for walmart ",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The search query"
+                    }
+                },
+                "required": ["query"]
             }
         }
     }
