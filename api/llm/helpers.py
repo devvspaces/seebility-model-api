@@ -6,6 +6,8 @@ from decouple import config
 
 # Accessing the environment variables
 client_token = config('ZINC_API_KEY')
+client_token = config('SERPAPI')
+
 cart = []
 contact=[]
 # takes search query and searches for product
@@ -27,3 +29,15 @@ def get_contact(contact_info):
     contact.append(contact_info)
     #code that stores contact info in db
     return contact_info
+
+def walmart_search(query):
+    params = {
+    "engine": "walmart",
+    "query": {query},
+    "api_key": serpapikey
+    }
+
+    search = GoogleSearch(params)
+    results = search.get_dict()
+    organic_results = results["organic_results"]
+    return organic_results
