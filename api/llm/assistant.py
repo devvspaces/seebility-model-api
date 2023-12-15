@@ -8,7 +8,7 @@ from decouple import config
 
 
 class AssistantManager:
-    def __init__(self, api_key, model="gpt-3.5-turbo-1106", functions={"search": helpers.search, "add_to_cart":helpers.add_to_cart, "get_contact":helpers.get_contact}):
+    def __init__(self, api_key, model="gpt-3.5-turbo-1106", functions={"amazon_search": helpers.amazon_search,"walmart_search": helpers.walmart_search, "add_to_cart":helpers.add_to_cart, "get_contact":helpers.get_contact}):
         self.client = OpenAI(api_key=api_key)
         self.model = model
         self.available_functions = functions
