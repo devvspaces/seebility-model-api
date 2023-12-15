@@ -11,7 +11,7 @@ contact=[]
 # takes search query and searches for product
 
 
-def search(query):
+def amazon_search(query):
     response = requests.get(f'https://api.zinc.io/v1/search?query={query}&page=1&retailer=amazon',
                             auth=(client_token, ''))
     result = response.json()
