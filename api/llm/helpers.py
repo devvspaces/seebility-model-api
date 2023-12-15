@@ -2,11 +2,12 @@
 import requests
 import os
 import requests
+from serpapi import GoogleSearch
 from decouple import config
 
 # Accessing the environment variables
 client_token = config('ZINC_API_KEY')
-client_token = config('SERPAPI')
+serpapikey = config('SERPAPI')
 
 cart = []
 contact=[]
