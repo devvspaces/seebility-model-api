@@ -120,7 +120,7 @@ def create_manager():
                 "function": {
                     "name": "amazon_search",
                     "description": "Retrieves the search results given the search query for amazon",
-                    "parameters": {=
+                    "parameters": {
                         "type": "object",
                         "properties": {
                             "query": {
