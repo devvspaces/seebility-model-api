@@ -70,7 +70,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(message)
 
         start = time()
-        run = manager.run_assistant(transcript)
+        try:
+            run = manager.run_assistant(transcript)
+        except Exception as e:
+            print(e)
+            run = "Sorry, I didn't understand that"
         print(f"Process: Run Assistant: Time taken: {time() - start}s")
 
         # Send message to room group
